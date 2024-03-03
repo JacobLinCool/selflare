@@ -21,3 +21,5 @@ selflare compile   # Compile the worker to Cap'n Proto
 selflare docker    # Generate Dockerfile and docker-compose.yml
 docker compose up  # Run the worker
 ```
+
+The image is based on [`jacoblincool/workerd`](https://github.com/JacobLinCool/workerd-docker) which has a size of 35MB (compressed) and supports both `amd64` and `arm64` architectures.
