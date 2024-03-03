@@ -1,0 +1,190 @@
+openapi: 3.0.3
+info:
+    title: Test Worker API
+    version: 1.0.0
+servers:
+    - url: "{scheme}://{host}:{port}"
+      variables:
+          scheme:
+              enum:
+                  - http
+                  - https
+              default: http
+          host:
+              default: localhost
+          port:
+              default: "8080"
+paths:
+    /kv:
+        get:
+            summary: List all keys in the KV namespace
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+    /kv/{key}:
+        get:
+            summary: Get a specific key's value from the KV namespace
+            parameters:
+                - in: path
+                  name: key
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+        put:
+            summary: Update the value of a specific key in the KV namespace
+            parameters:
+                - in: path
+                  name: key
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    ok:
+                                        type: boolean
+    /d1:
+        get:
+            summary: List all persons in the database
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Person"
+    /d1/{id}:
+        get:
+            summary: Get a specific person by ID
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Person"
+        put:
+            summary: Add or update a person in the database
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PersonInput"
+            responses:
+                "200":
+                    description: OK
+    /r2:
+        get:
+            summary: List all objects in the R2 bucket
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: string
+    /r2/{id}:
+        get:
+            summary: Get a specific object from the R2 bucket
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Object found
+                    content:
+                        application/octet-stream:
+                            schema:
+                                type: string
+        put:
+            summary: Add or update an object in the R2 bucket
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    image/png:
+                        schema:
+                            type: string
+                            format: binary
+                    image/jpeg:
+                        schema:
+                            type: string
+                            format: binary
+                    application/octet-stream:
+                        schema:
+                            type: string
+                            format: binary
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    ok:
+                                        type: boolean
+components:
+    schemas:
+        Person:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+                age:
+                    type: integer
+        PersonInput:
+            type: object
+            properties:
+                name:
+                    type: string
+                age:
+                    type: integer

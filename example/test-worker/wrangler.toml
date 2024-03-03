@@ -1,0 +1,24 @@
+name = "test"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+MY_VARIABLE = "production_value"
+
+[[kv_namespaces]]
+binding = "MY_KV_NAMESPACE"
+id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+[[r2_buckets]]
+binding = "MY_BUCKET"
+bucket_name = "my-bucket"
+
+[[d1_databases]]
+binding = "MY_DATABASE"
+database_name = "my-database"
+database_id = "1d4a0d08-eac4-4383-9365-abcdef123456"
+
+[[rules]]
+type = "Text"
+globs = ["**/*.yaml"]
+fallthrough = true

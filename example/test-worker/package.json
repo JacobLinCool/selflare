@@ -1,0 +1,19 @@
+{
+	"private": true,
+	"name": "test-worker",
+	"version": "0.0.0",
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"build:image": "selflare compile && docker build -t test-worker ."
+	},
+	"dependencies": {
+		"itty-router": "^4.0.27"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20240222.0",
+		"typescript": "^5.3.3",
+		"wrangler": "^3.30.1"
+	}
+}

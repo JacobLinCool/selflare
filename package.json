@@ -1,0 +1,58 @@
+{
+	"name": "selflare",
+	"version": "0.0.0",
+	"description": "Compile Cloudflare Workers to Cap'n Proto and deliver them as Docker images.",
+	"keywords": [
+		"cloudflare",
+		"worker",
+		"capnp",
+		"capnproto",
+		"docker",
+		"image"
+	],
+	"author": "JacobLinCool <jacoblincool@gmail.com> (https://github.com/JacobLinCool)",
+	"license": "MIT",
+	"bin": {
+		"selflare": "dist/index.js"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"prepare": "husky",
+		"patch:mf": "tsx scripts/patch-miniflare.ts",
+		"build": "pnpm run patch:mf && tsup",
+		"changeset": "changeset",
+		"format": "prettier --write . --ignore-path .gitignore",
+		"test": "vitest --dir test"
+	},
+	"dependencies": {
+		"@iarna/toml": "^2.2.5",
+		"dedent": "^1.5.1",
+		"workerd": "^1.20240223.1",
+		"wrangler": "^3.30.1",
+		"yargs": "^17.7.2"
+	},
+	"devDependencies": {
+		"@changesets/changelog-github": "^0.5.0",
+		"@changesets/cli": "^2.27.1",
+		"@types/iarna__toml": "^2.0.5",
+		"@types/node": "^20.11.24",
+		"@types/yargs": "^17.0.32",
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.2",
+		"miniflare": "^3.20240223.0",
+		"prettier": "^3.2.5",
+		"prettier-plugin-organize-imports": "^3.2.4",
+		"tsup": "^8.0.2",
+		"tsx": "^4.7.1",
+		"typescript": "^5.3.3",
+		"vitest": "^1.3.1"
+	},
+	"lint-staged": {
+		"*.{ts,js,json,yaml,yml}": [
+			"prettier --write"
+		]
+	},
+	"packageManager": "pnpm@8.15.4"
+}

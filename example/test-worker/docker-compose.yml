@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+    worker:
+        build: .
+        image: test-worker
+        volumes:
+            - ./.storage/cache:/worker/cache
+            - ./.storage/kv:/worker/kv
+            - ./.storage/d1:/worker/d1
+            - ./.storage/r2:/worker/r2
+        ports:
+            - "8080:8080"
