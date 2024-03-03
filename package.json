@@ -1,6 +1,6 @@
 {
 	"name": "selflare",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"description": "Compile Cloudflare Workers to Cap'n Proto and deliver them as Docker images.",
 	"keywords": [
 		"cloudflare",
