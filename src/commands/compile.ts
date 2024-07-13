@@ -52,6 +52,9 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 	const port = await mf.getLoopbackPort();
 	// @ts-expect-error private method usage
 	const config = await mf.assembleConfig(port);
+	if (argv.debug) {
+		console.log(inspect(config, { compact: true, depth: 10, breakLength: 80 }));
+	}
 
 	// configure dir mappings
 	for (const service of config.services) {
@@ -79,6 +82,16 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 	// set socket
 	config.sockets[0].address = "*:8080";
 	config.sockets[0].service.name = "core:user:";
+
+	// set vars to be read from environment variables
+	const core = config.services.find((s: any) => s.name === "core:user:");
+	for (const binding of core.worker.bindings) {
+		// seems to be a var binding
+		if (typeof binding.json === "string") {
+			delete binding.json;
+			binding.fromEnvironment = binding.name;
+		}
+	}
 
 	if (argv.debug) {
 		console.log(inspect(config, { compact: true, depth: 10, breakLength: 80 }));
