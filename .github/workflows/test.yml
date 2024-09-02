@@ -35,3 +35,9 @@ jobs:
 
             - name: Test
               run: pnpm test
+
+            - name: Test installation
+              run: |
+                  pnpm link -g
+                  # Just execution the binary and letting it exit successfully is enough
+                  selflare --version
