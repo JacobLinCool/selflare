@@ -54,7 +54,7 @@
 			"prettier --write"
 		]
 	},
-	"packageManager": "pnpm@8.15.4",
+	"packageManager": "pnpm@8.15.9",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/JacobLinCool/selflare.git"
