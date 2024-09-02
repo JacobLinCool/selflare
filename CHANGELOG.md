@@ -1,5 +1,11 @@
 # selflare
 
+## 1.1.2
+
+### Patch Changes
+
+- [#14](https://github.com/JacobLinCool/selflare/pull/14) [`4d57656`](https://github.com/JacobLinCool/selflare/commit/4d57656bc57a910c6e9305f964377582d841feb4) Thanks [@OhMyMndy](https://github.com/OhMyMndy)! - Add shebang to the installed "binary" to make Selflare executable
+
 ## 1.1.0
 
 ### Minor Changes
