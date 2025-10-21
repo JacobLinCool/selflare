@@ -14,10 +14,40 @@ interface CompileArgs {
 }
 
 export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
-	const { main, workerOptions } = unstable_getMiniflareWorkerOptions("wrangler.toml");
+	const worker_config_filenames = ['wrangler.toml', 'wrangler.jsonc', 'wrangler.json']
+	let worker_config_filename: string | undefined
+	for (const filename of worker_config_filenames) {
+		if (fs.existsSync(filename)) {
+			worker_config_filename = filename
+			break
+		}
+	}
+	if (!worker_config_filename) {
+		throw new Error('file not found: ' + String(worker_config_filenames))
+	}
+
+	let worker_config: any
+	if (worker_config_filename === 'wrangler.toml') {
+		worker_config = TOML.parse(fs.readFileSync("wrangler.toml", "utf-8"));
+	} else if (worker_config_filename === 'wrangler.jsonc') {
+		console.log('Selflare is incompatible with jsonc. Creating wrangler.json...')
+		const worker_config_text = fs.readFileSync("wrangler.jsonc", "utf-8").split('\n')
+		for (let line_index = 0; line_index < worker_config_text.length; line_index++) {
+			const first_char = worker_config_text[line_index].trimStart()[0]
+			if (['/', '*'].includes(first_char)) {
+				worker_config_text[line_index] = ''
+			}
+		}
+		fs.writeFileSync('wrangler.json', worker_config_text.filter(line => line !== '').join('\n'))
+		worker_config_filename = 'wrangler.json'
+	} if (worker_config_filename === 'wrangler.json') {
+		worker_config = JSON.parse(fs.readFileSync("wrangler.json", "utf-8"));
+	}
+
+	const { main, workerOptions } = unstable_getMiniflareWorkerOptions(worker_config_filename);
 
 	if (!main) {
-		throw new Error("No main in wrangler.toml");
+		throw new Error("No main in " + worker_config_filename);
 	}
 
 	if (argv.debug) {
@@ -30,17 +60,15 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 		argv.script = ".wrangler/dist/index.js";
 	}
 	console.log("Using script from", argv.script);
-
-	const toml: any = TOML.parse(fs.readFileSync("wrangler.toml", "utf-8"));
 	if (argv.debug) {
-		console.log(inspect(toml, { compact: true, depth: 10, breakLength: 80 }));
+		console.log(inspect(worker_config, { compact: true, depth: 10, breakLength: 80 }));
 	}
 
 	const mf = new Miniflare({
 		scriptPath: argv.script,
 		...workerOptions,
 		modules: true,
-		modulesRules: toml.rules?.map((r: any) => ({
+		modulesRules: worker_config.rules?.map((r: any) => ({
 			type: r.type,
 			fallthrough: r.fallthrough,
 			include: r.globs,

@@ -8,8 +8,20 @@ beforeAll(() => {
 });
 
 describe("compile", () => {
-	it("should compile example", () => {
+	it("should compile toml example", () => {
 		const dir = path.join("example", "test-worker");
+		const capnp = path.join(dir, "worker.capnp");
+		if (fs.existsSync(capnp)) {
+			fs.unlinkSync(capnp);
+		}
+		execSync(`node ../../dist/index.js compile`, { cwd: dir });
+		expect(fs.existsSync(capnp)).toBe(true);
+	});
+}, 30_000);
+
+describe("compile", () => {
+	it("should compile jsonc example", () => {
+		const dir = path.join("example", "test-worker-jsonc");
 		const capnp = path.join(dir, "worker.capnp");
 		if (fs.existsSync(capnp)) {
 			fs.unlinkSync(capnp);
