@@ -3,6 +3,7 @@ import { Miniflare, serializeConfig } from "miniflare";
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import { inspect } from "node:util";
+import stripJsonComments from "strip-json-comments";
 import { unstable_getMiniflareWorkerOptions } from "wrangler";
 import type { Arguments } from "yargs";
 
@@ -30,14 +31,8 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 	if (worker_config_filename === 'wrangler.toml') {
 		worker_config = TOML.parse(fs.readFileSync("wrangler.toml", "utf-8"));
 	} else if (worker_config_filename === 'wrangler.jsonc') {
-		const worker_config_text = fs.readFileSync("wrangler.jsonc", "utf-8").split('\n')
-		for (let line_index = 0; line_index < worker_config_text.length; line_index++) {
-			const first_char = worker_config_text[line_index].trimStart()[0]
-			if (['/', '*'].includes(first_char)) {
-				worker_config_text[line_index] = ''
-			}
-		}
-		worker_config = JSON.parse(worker_config_text.filter(line => line !== '').join('\n'))
+		const worker_config_text = fs.readFileSync("wrangler.jsonc", "utf-8")
+		worker_config = JSON.parse(stripJsonComments(worker_config_text))
 	} else if (worker_config_filename === 'wrangler.json') {
 		worker_config = JSON.parse(fs.readFileSync("wrangler.json", "utf-8"));
 	}
