@@ -30,7 +30,6 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 	if (worker_config_filename === 'wrangler.toml') {
 		worker_config = TOML.parse(fs.readFileSync("wrangler.toml", "utf-8"));
 	} else if (worker_config_filename === 'wrangler.jsonc') {
-		console.log('Selflare is incompatible with jsonc. Creating wrangler.json...')
 		const worker_config_text = fs.readFileSync("wrangler.jsonc", "utf-8").split('\n')
 		for (let line_index = 0; line_index < worker_config_text.length; line_index++) {
 			const first_char = worker_config_text[line_index].trimStart()[0]
@@ -38,9 +37,8 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 				worker_config_text[line_index] = ''
 			}
 		}
-		fs.writeFileSync('wrangler.json', worker_config_text.filter(line => line !== '').join('\n'))
-		worker_config_filename = 'wrangler.json'
-	} if (worker_config_filename === 'wrangler.json') {
+		worker_config = JSON.parse(worker_config_text.filter(line => line !== '').join('\n'))
+	} else if (worker_config_filename === 'wrangler.json') {
 		worker_config = JSON.parse(fs.readFileSync("wrangler.json", "utf-8"));
 	}
 
