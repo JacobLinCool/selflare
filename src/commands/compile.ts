@@ -35,6 +35,8 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 		worker_config = JSON.parse(stripJsonComments(worker_config_text))
 	} else if (worker_config_filename === 'wrangler.json') {
 		worker_config = JSON.parse(fs.readFileSync("wrangler.json", "utf-8"));
+	} else {
+		throw new Error("Unrecognized worker config filename: " + worker_config_filename);
 	}
 
 	const { main, workerOptions } = unstable_getMiniflareWorkerOptions(worker_config_filename);
