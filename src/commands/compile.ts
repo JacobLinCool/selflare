@@ -29,12 +29,12 @@ export async function compile(argv: Arguments<CompileArgs>): Promise<void> {
 
 	let worker_config: any
 	if (worker_config_filename === 'wrangler.toml') {
-		worker_config = TOML.parse(fs.readFileSync("wrangler.toml", "utf-8"));
+		worker_config = TOML.parse(fs.readFileSync(worker_config_filename, "utf-8"));
 	} else if (worker_config_filename === 'wrangler.jsonc') {
-		const worker_config_text = fs.readFileSync("wrangler.jsonc", "utf-8")
+		const worker_config_text = fs.readFileSync(worker_config_filename, "utf-8")
 		worker_config = JSON.parse(stripJsonComments(worker_config_text))
 	} else if (worker_config_filename === 'wrangler.json') {
-		worker_config = JSON.parse(fs.readFileSync("wrangler.json", "utf-8"));
+		worker_config = JSON.parse(fs.readFileSync(worker_config_filename, "utf-8"));
 	} else {
 		throw new Error("Unrecognized worker config filename: " + worker_config_filename);
 	}
