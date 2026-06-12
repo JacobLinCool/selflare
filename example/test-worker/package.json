@@ -9,7 +9,7 @@
 		"build:image": "selflare compile && docker build -t test-worker ."
 	},
 	"dependencies": {
-		"itty-router": "^4.0.27"
+		"itty-router": "^5.0.0"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240222.0",
